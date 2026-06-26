@@ -23,3 +23,5 @@ $govuk-page-width: $moj-page-width;
 .wrapped-pre {
   white-space: pre-wrap;
 }
+
+@import './debug-session';

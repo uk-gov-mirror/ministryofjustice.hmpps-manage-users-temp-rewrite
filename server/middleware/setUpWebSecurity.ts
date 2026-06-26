@@ -7,6 +7,12 @@ import config from '../config'
 export default function setUpWebSecurity(): Router {
   const router = express.Router()
 
+  // NOTE: When not in production, cdnjs.cloudflare.com is added to scriptSrc/styleSrc below
+  // to support highlight.js on the /debug/session/view page. This change is gated behind
+  // !config.production so it does not apply in any deployed environment.
+  const debugScriptSrc = config.production ? [] : ['https://cdnjs.cloudflare.com']
+  const debugStyleSrc = config.production ? [] : ['https://cdnjs.cloudflare.com']
+
   // Secure code best practice - see:
   // 1. https://expressjs.com/en/advanced/best-practice-security.html,
   // 2. https://www.npmjs.com/package/helmet
@@ -28,10 +34,12 @@ export default function setUpWebSecurity(): Router {
           scriptSrc: [
             "'self'",
             (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`,
+            ...debugScriptSrc,
           ],
           styleSrc: [
             "'self'",
             (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`,
+            ...debugStyleSrc,
           ],
           fontSrc: ["'self'"],
           formAction: [`'self' ${config.apis.hmppsAuth.externalUrl}`],

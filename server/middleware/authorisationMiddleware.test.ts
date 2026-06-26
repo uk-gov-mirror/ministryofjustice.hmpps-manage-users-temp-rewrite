@@ -47,6 +47,16 @@ describe('authorisationMiddleware', () => {
     expect(req.session.returnTo).toEqual('/')
   })
 
+  it('should use / as returnTo for .well-known paths (e.g. Chrome DevTools probe)', () => {
+    req = { originalUrl: '/.well-known/appspecific/com.chrome.devtools.json', session: { returnTo: '' } } as Request
+    const res = { redirect: jest.fn() } as unknown as Response
+
+    authorisationMiddleware()(req, res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith('/sign-in')
+    expect(req.session.returnTo).toEqual('/')
+  })
+
   it('should return next when user has a token', () => {
     req = { path: '/' } as Request
     const res = createResWithToken({ authorities: [AuthRole.CREATE_USER] })
