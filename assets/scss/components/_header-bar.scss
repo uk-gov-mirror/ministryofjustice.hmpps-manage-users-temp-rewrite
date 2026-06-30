@@ -43,6 +43,12 @@
     @include govuk-link-common;
     @include govuk-link-style-default;
 
+    &.hmpps-header__link--switch-account {
+      display: inline-flex;
+      align-items: center;
+      gap: govuk-spacing(1);
+    }
+
     &:link,
     &:visited,
     &:active {
@@ -99,6 +105,12 @@
 
       a {
         display: inline-block;
+      }
+
+      &__links {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: flex-end;
       }
 
       &:last-child {

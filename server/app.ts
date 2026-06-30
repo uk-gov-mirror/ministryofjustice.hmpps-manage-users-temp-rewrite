@@ -35,6 +35,14 @@ export default function createApp(services: Services): express.Application {
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())
+  // Expose query parameters to Nunjucks templates via res.locals.query.
+  // For local development only — allows templates to branch on query params (e.g. for debug views).
+  if (process.env.NODE_ENV !== 'production') {
+    app.use((req, res, next) => {
+      res.locals.query = req.query
+      next()
+    })
+  }
 
   app.use(routes(services))
 
